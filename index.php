@@ -13,9 +13,15 @@ if ((isset($uri[$index]) && !in_array($uri[$index], $paths)) || !isset($uri[$ind
 }
 
 require PROJECT_ROOT_PATH . "/Controller/Api/UserController.php";
+$requestMethod = $_SERVER["REQUEST_METHOD"];
+
 if ($uri[$index] == "users") {
     $objFeedController = new UserController();
-    $strMethodName = $uri[$index + 1] . 'Action';
-    $objFeedController->{$strMethodName}();
+    $strMethodName = strtolower($requestMethod) . "_" . $uri[$index + 1] . '_action';
+    if ($requestMethod == 'GET') {
+        $objFeedController->{$strMethodName}();
+    } else if ($requestMethod == 'POST') {
+        $objFeedController->{$strMethodName}($_POST);
+    }
 }
 ?>

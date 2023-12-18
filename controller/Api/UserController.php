@@ -47,33 +47,41 @@ class UserController extends BaseController
     public function post_login_action($post_data)
     {
         $strErrorDesc = '';
-        if (isset($post_data["username"]) && isset($post_data["password"])) {
+        if (isset($post_data->username) && isset($post_data->password)) {
             try {
                 $userModel = new UserModel();
 
-                $user = $userModel->getUserByUsername($post_data["username"]);
-                if ( password_verify(htmlspecialchars($post_data['password']), $user->password)) {
-                    $responseData = array(
-                        "verified" => "verified",
-                        "user_id" => $user->user_id,
-                        "username" => $user->username,
-                        "name" => $user->name,
-                        "surname"  => $user->surname,
-                        "email"=> $user->email,
-                        "birthdate" => $user->birthdate
-                    );
-                }
-                else{
-                    $responseData = array(
-                        "verified" => "error",
-                        "user_id" => $user->user_id,
-                        "username" => $user->username,
-                        "name" => $user->name,
-                        "surname"  => $user->surname,
-                        "email"=> $user->email,
-                        "birthdate" => $user->birthdate
-                    );
-                }
+                $user = $userModel->getUserByUsername($post_data->username);
+                echo $user;
+                // if (count($user) > 0) {
+                    if (password_verify(htmlspecialchars($post_data->password), $user->password)) {
+                        $responseData = array(
+                            "verified" => true,
+                            "user_id" => $user->user_id,
+                            "username" => $user->username,
+                            "name" => $user->name,
+                            "surname" => $user->surname,
+                            "email" => $user->email,
+                            "birthdate" => $user->birthdate
+                        );
+                    } else {
+                        $responseData = array(
+                            "verified" => false,
+                            "msg" => "El usuario o contraseña son incorrectos",
+                            "user_id" => $user->user_id,
+                            "username" => $user->username,
+                            "name" => $user->name,
+                            "surname" => $user->surname,
+                            "email" => $user->email,
+                            "birthdate" => $user->birthdate
+                        );
+                    }
+                // } else {
+                //     $responseData = array(
+                //         "verified" => false,
+                //         "msg" => "No se ha encontrado ese usuario."
+                //     );
+                // }
                 $responseData = json_encode($responseData);
             } catch (Error $e) {
                 $strErrorDesc = $e->getMessage() . 'Something went wrong! Please contact support.';

@@ -52,7 +52,7 @@ class UserController extends BaseController
                 $userModel = new UserModel();
 
                 $user = $userModel->getUserByUsername($post_data->username);
-                echo $user;
+                // echo $user;
                 // if (count($user) > 0) {
                     if (password_verify(htmlspecialchars($post_data->password), $user->password)) {
                         $responseData = array(
@@ -68,12 +68,6 @@ class UserController extends BaseController
                         $responseData = array(
                             "verified" => false,
                             "msg" => "El usuario o contraseña son incorrectos",
-                            "user_id" => $user->user_id,
-                            "username" => $user->username,
-                            "name" => $user->name,
-                            "surname" => $user->surname,
-                            "email" => $user->email,
-                            "birthdate" => $user->birthdate
                         );
                     }
                 // } else {
@@ -88,7 +82,7 @@ class UserController extends BaseController
                 $strErrorHeader = 'HTTP/1.1 500 Internal Server Error';
             }
         } else {
-            $strErrorDesc = "We need don't have request data";
+            $strErrorDesc = "We don't have request data";
             $strErrorHeader = 'HTTP/1.1 500 Internal Server Error';
         }
 

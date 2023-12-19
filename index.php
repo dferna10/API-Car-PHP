@@ -8,7 +8,7 @@ require __DIR__ . "/config/routes-config.php";
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $uri = explode('/', $uri);
 
-$paths = ["users"];
+$paths = ["users", "heart_rate"];
 $index = 2;
 
 if ((isset($uri[$index]) && !in_array($uri[$index], $paths)) || !isset($uri[$index + 1])) {
@@ -17,27 +17,42 @@ if ((isset($uri[$index]) && !in_array($uri[$index], $paths)) || !isset($uri[$ind
 }
 
 require PROJECT_ROOT_PATH . "/Controller/Api/UserController.php";
+require PROJECT_ROOT_PATH . "/Controller/Api/HeartRateController.php";
 $requestMethod = $_SERVER["REQUEST_METHOD"];
 
-$file = fopen(PROJECT_ROOT_PATH ."/logs/logs.txt", "a");
-
+// $file = fopen(PROJECT_ROOT_PATH . "/logs/logs.txt", "a");
 // fwrite($file, "Nueva peticion" . PHP_EOL);
-// fwrite($file, "Valores post " . json_encode($_POST) . PHP_EOL);
-// fwrite($file, "Username ".$_POST["username"] . PHP_EOL);
-// fwrite($file, "Password: ".$_POST["password"] . PHP_EOL);
-// // fwrite($file, "Otra más" . PHP_EOL);
+// fclose($file);
 
-fclose($file);
-if ($uri[$index] == "users") {
-    $objFeedController = new UserController();
-    $strMethodName = strtolower($requestMethod) . "_" . $uri[$index + 1] . '_action';
-    if ($requestMethod == 'GET') {
-        $objFeedController->{$strMethodName}();
-    } else if ($requestMethod == 'POST') {
-        
-        $json = file_get_contents("php://input");
-        // echo $json;
-        $objFeedController->{$strMethodName}(json_decode($json));
-    }
+// if ($uri[$index] == "users") {
+//     $objFeedController = new UserController();
+//     $strMethodName = strtolower($requestMethod) . "_" . $uri[$index + 1] . '_action';
+//     if ($requestMethod == 'GET') {
+//         $objFeedController->{$strMethodName}();
+//     } else if ($requestMethod == 'POST') {
+
+//         $json = file_get_contents("php://input");
+//         // echo $json;
+//         $objFeedController->{$strMethodName}(json_decode($json));
+//     }
+// }
+
+switch ($uri[$index]) {
+    case "users":
+        $objFeedController = new UserController();
+        break;
+    case "heart_rate":
+        $objFeedController = new HeartRateController();
+        break;
+}
+
+$strMethodName = strtolower($requestMethod) . "_" . $uri[$index + 1] . '_action';
+if ($requestMethod == 'GET') {
+    $objFeedController->{$strMethodName}();
+} else if ($requestMethod == 'POST') {
+
+    $json = file_get_contents("php://input");
+    echo $json;
+    $objFeedController->{$strMethodName}(json_decode($json));
 }
 ?>

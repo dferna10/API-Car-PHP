@@ -6,4 +6,6 @@ require_once PROJECT_ROOT_PATH . "/config/config.php";
 require_once PROJECT_ROOT_PATH . "/controller/Api/BaseController.php";
 // include the use model file 
 require_once PROJECT_ROOT_PATH . "/database/UserModel.php";
+require_once PROJECT_ROOT_PATH . "/database/HeartRateModel.php";
+require_once PROJECT_ROOT_PATH . "/database/HeartRateMeasuresModel.php";
 ?>

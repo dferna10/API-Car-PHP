@@ -52,7 +52,7 @@ if ($requestMethod == 'GET') {
 } else if ($requestMethod == 'POST') {
 
     $json = file_get_contents("php://input");
-    echo $json;
+    // echo $json;
     $objFeedController->{$strMethodName}(json_decode($json));
 }
 ?>

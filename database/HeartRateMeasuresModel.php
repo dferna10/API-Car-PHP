@@ -19,9 +19,6 @@ class HeartRateMeasuresModel extends Conection
         $stmt->execute();
         
         $this->disconnect();
-
-        return $stmt->fetchAll(PDO::FETCH_OBJ);
-        
     }
 
 }

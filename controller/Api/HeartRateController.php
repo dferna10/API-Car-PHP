@@ -25,10 +25,11 @@ class HeartRateController extends BaseController
                 $heartRate = new HeartRateModel();
                 $heartRegister = $heartRate->insertNewHeartRate($data->heart_rate);
                 if($heartRegister){
-                    $heartRateId = $heartRegister->heart_rate_id;
+                    $heart_rate_id = $heartRate->getLastRegisterId($data->heart_rate->user_id);
+                    $heart_rate_id = $heart_rate_id[0];
                     $hearRateMeasure = new HeartRateMeasuresModel();
                     foreach ($data->heart_rate_measures as $measure) {
-                        $hearRateMeasure->insertNewMeasure($data->heart_rate_measures, $heartRateId);
+                        $hearRateMeasure->insertNewMeasure($measure, $heart_rate_id->heart_rate_id);
                     }
                     // Posibilidad de añadir el cuestionario
                     $responseData = array(
@@ -44,7 +45,7 @@ class HeartRateController extends BaseController
                     );
                 }
             } catch (Exception $e) {
-                $strErrorDesc = $e->getMessage() . ' Something went wrong! Please contact support.';
+                $strErrorDesc = $e->getMessage() . " ". $e->getLine() .  ' \n Something went wrong! Please contact support.';
                 $strErrorHeader = 'HTTP/1.1 500 Internal Server Error';
             }
         } else {

@@ -29,9 +29,26 @@ class HeartRateController extends BaseController
                     $heart_rate_id = $heart_rate_id[0];
                     $hearRateMeasure = new HeartRateMeasuresModel();
                     foreach ($data->heart_rate_measures as $measure) {
-                        $hearRateMeasure->insertNewMeasure($measure, $heart_rate_id->heart_rate_id);
+                        
+                        $result = $hearRateMeasure->insertNewMeasure($measure, $heart_rate_id->heart_rate_id);
+                        // Comprobar si se añaden, y sino saltar error
+                        if(!$result){
+                            $heartRate->removeRegister($heart_rate_id->heart_rate_id);
+                            $strErrorDesc = "Problemas para añadir los datos. Intentelo de nuevo.";
+                            break;
+                        }
                     }
                     // Posibilidad de añadir el cuestionario
+                    if(!$strErrorDesc){
+                        // Añadir el cuestionario
+                        $questionary = new QuestionaryModel();
+                        $result = $questionary->insertNewQuestionary($data->questionary, $heart_rate_id->heart_rate_id);
+                        if(!$result){
+                            $heartRate->removeRegister($heart_rate_id->heart_rate_id);
+                            $strErrorDesc = "Problemas para añadir los datos. Intentelo de nuevo.";
+                        }
+                    }
+
                     $responseData = array(
                         "status" => "success",
                         "message" => "Todos los datos de la medición han sido registrados",
